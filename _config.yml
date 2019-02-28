@@ -16,10 +16,10 @@ minimal_mistakes_skin    : "mint" # "air", "aqua", "contrast", "dark", "dirt", "
 
 # Site Settings
 locale                   : "en-CA"
-title                    : "Jason Hu"
+title                    : "Personal Blog of Jason Hu"
 title_separator          : "-"
-name                     : "Jason Hu"
-description              : "Testing Jekyll Themes"
+name                     : "jsnhu"
+description              : "Work in progress."
 url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -106,10 +106,10 @@ analytics:
 
 # Site Author
 author:
-  name             : "Your Name"
+  name             : "Jason Hu"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Student at the University of British Columbia."
-  location         : "Somewhere"
+  location         : "Vancouver, BC"
   email            :
   links:
     - label: "Email"
