@@ -1,5 +1,7 @@
 # main links
 main:
+  - title: "About"
+    url: https://jsnhu.github.io/jekyll/about
   - title: "GitHub"
     url: https://github.com/jsnhu
   # - title: "About"
