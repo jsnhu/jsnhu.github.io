@@ -58,7 +58,7 @@ We create an 8x17 preference table in Excel where the entry in the *ith* row, *j
 
 Automatically, **C** is the assumed preference to desk shifts for shelf employees and shelf shifts for desk employees.
 
-![](images/preftable.png "Sample of the preference table.")
+![](/assets/images/preftable.png "Sample of the preference table.")
 
 We translate these preferences into numerical scores to be used in the model's objective function.
 * **C** = -1000
@@ -66,7 +66,7 @@ We translate these preferences into numerical scores to be used in the model's o
 * **N** = 0
 * **P** = 1
 
-![](images/preftable1.png "Sample of the preference table with numerical values.")
+![](/assets/images/preftable1.png "Sample of the preference table with numerical values.")
 
 Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel files into a Julia Dataframe.
 
@@ -113,7 +113,7 @@ Next, convert our preference table into a preference matrix and define a binary 
 ```
 
 Continuing, we can now define the hard constraints of our model. A valid schedule cannot violate these constraints. These can be generally interpreted as sums of rows or columns in our assignment matrix. Code for the first constraint is shown as an example (see GitHub for the rest).
-#### Constraints
+### Constraints
 1. There is exactly one person per shift.
 ```julia
 for j in 1:shift
@@ -134,7 +134,7 @@ end
 
 Finally, we run the solver and write the results into a DataFrame.
 
-```julia
+```
 Objective value: 1.0
 17×3 DataFrame
 │ Row │ Employee │ Shift │ Score │
@@ -166,6 +166,6 @@ We see that a possible optimal schedule (there could be others with objective va
 * A full-time employee goes on vacation and leaves five new shifts to be covered or a new part-time employee is hired. This will test how easy it is to update the system to account for changes to the number of staff or shifts.
 
 ### Future improvements:
-* Write the end result to a Excel.
+* Write the end result to an Excel sheet.
 * Automatically read the boundaries of the preference, staff, and shift tables in Excel to avoid manual inputting of cell ranges.
 * Eventually migrate to Google Spreadsheet to use preference updating with Google Forms and easy creation of a Google Calendar.
