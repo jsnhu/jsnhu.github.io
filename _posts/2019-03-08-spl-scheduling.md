@@ -6,6 +6,8 @@ share: false
 
 *This was originally a final project in Linear Algebra at Quest University completed with my classmates, Casey Lake and Edward Zuo, under Dr. Richard Hoshino. The data was obtained in August, 2017. I have since migrated it from Maple to an Excel/JuMP system for ease of use and updatability.*
 
+[See my GitHub for the Excel sheet and full Julia code.](https://github.com/jsnhu/spl-schedule)
+
 ## Problem Specifications
 
 The Squamish Public Library has eight part-time employees who must cover seventeen different shifts throughout the week. These library shifts are classified into two types: shelving shifts and circulation (desk) shifts. Certain employees can only work certain shifts. We refer to these employees by their initials:
