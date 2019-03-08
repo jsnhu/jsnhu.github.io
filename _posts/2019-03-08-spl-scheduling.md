@@ -1,6 +1,6 @@
 ---
 title:  "Library shift scheduling with Excel/JuMP"
-published: true
+published: false
 share: false
 ---
 
