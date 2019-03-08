@@ -58,7 +58,7 @@ We create an 8x17 preference table in Excel where the entry in the *ith* row, *j
 
 Automatically, **C** is the assumed preference to desk shifts for shelf employees and shelf shifts for desk employees.
 
-![](/assets/images/preftable.png "Sample of the preference table.")
+![image](/assets/images/preftable.png "Sample of the preference table.")
 
 We translate these preferences into numerical scores to be used in the model's objective function.
 * **C** = -1000
@@ -66,7 +66,7 @@ We translate these preferences into numerical scores to be used in the model's o
 * **N** = 0
 * **P** = 1
 
-![](/assets/images/preftable1.png "Sample of the preference table with numerical values.")
+![image](/assets/images/preftable1.png "Sample of the preference table with numerical values.")
 
 Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel files into a Julia Dataframe.
 
