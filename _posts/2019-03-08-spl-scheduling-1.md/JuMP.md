@@ -1,6 +1,6 @@
 ---
-title:  "Library shift scheduling with Excel/JuMP"
-published: false
+title:  "Draft:!!! Library shift scheduling with Excel/JuMP"
+published: true
 share: false
 ---
 
@@ -8,7 +8,7 @@ share: false
 
 ## Problem Specifications
 
-The Squamish Public Library has eight part-time employees who must cover seventeen different shifts. These library shifts are classified into two types: shelving shifts and circulation (desk) shifts. Certain employees can only work certain shifts. We refer to these employees by their initials:
+The Squamish Public Library has eight part-time employees who must cover seventeen different shifts throughout the week. These library shifts are classified into two types: shelving shifts and circulation (desk) shifts. Certain employees can only work certain shifts. We refer to these employees by their initials:
 * Three employees can *only* work desk shifts: KP, JP, EV.
 * Three employees can *only* work shelving shifts: DB, WA, TF.
 * Two employees can work *either* desk or shelving shifts: VG, ND.
@@ -25,3 +25,5 @@ We assign labels to the employees as follows:
 | 6 | DB   | shelf |
 | 7 | WA   | shelf |
 | 8 | TF   | shelf |
+
+We assign labels to the seventeen shifts in the week:
