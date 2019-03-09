@@ -83,7 +83,7 @@ In other words, the solver will produce a schedule which maximizes the sum of th
 
 We want as many people as possible to get preferred shifts in order to have a higher objective score.
 
-Next, we convert our preference score table into a preference score matrix and we define a binary assignment matrix. This is the variable to be optimized in the model. Note that `staff` represents the total number of employees and `shift` represents the total number of shifts. They are 8 and 17 respectively but automatically update when the number of employees/shifts changes in the Excel sheet.
+Next, we convert our preference score table into a preference score matrix and we define a binary assignment matrix. This is the variable to be optimized in the model. Note that `staff` represents the total number of employees and `shift` represents the total number of shifts. They are 8 and 17 respectively but automatically update when the number of employees/shifts change in the Excel sheet.
 
 ```julia
 # staff x shift binary assignment matrix
