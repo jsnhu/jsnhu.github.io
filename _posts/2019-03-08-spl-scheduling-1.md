@@ -39,7 +39,7 @@ In general, these values are arbitrary. For now, the important point is that pre
 
 In another sheet, we have the translated score values. These are the values which will be read into Julia.
 
-![image](/assets/images/preftable1.png "Sample of the preference table with numerical values.")
+<img src="/assets/images/preftable1.png">
 
 Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel sheets into Julia DataFrames. We read the staff, shift, and preference score tables.
 
