@@ -142,7 +142,7 @@ Objective value: 1.0
 │ 17  │ 8        │ TF     │ 7     │ Mon    │ 16:30-20:30 │ shelf  │ 0     │
 ```
 
-We see that a possible optimal schedule (there could be others with objective value 1.0, but certainly none greater) only assigns VG to unpreferred shifts. However, most employees are satisfied in general considering our original preference matrix had very few **P** entries.
+We see that a possible optimal schedule (there could be others with objective value 1.0, but certainly none greater) assigns VG to unpreferred shifts. However, most employees are satisfied in general considering our original preference matrix had very few **P** entries.
 
 ### Future extensions:
 * Generally, desk shifts have higher pay than shelving shifts. Thus, those who can work both may want to be guaranteed a desk shift. If we look at the current schedule, VG and ND are relegated to picking up the left-over shelving shifts.
