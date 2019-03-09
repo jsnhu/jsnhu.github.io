@@ -1,5 +1,5 @@
 ---
-title:  "Test post: Library shift scheduling with Excel/JuMP"
+title:  "Library shift scheduling with Excel/JuMP"
 published: true
 share: false
 ---
