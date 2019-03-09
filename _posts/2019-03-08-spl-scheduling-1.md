@@ -17,29 +17,31 @@ The Squamish Public Library has eight part-time employees who must cover sevente
 
 We have an Excel sheet which contains all of the data about employees and shifts called "Dictionary" where we enumerate the employees with a value *i* and shifts with a value *j*.
 
-
 <img src="/assets/images/dictionarysheet.png">
 
-
-We create an 8x17 preference table in Excel where the entry in the *ith* row, *jth* column represents employee *i*'s preference for shift *j*. The entries are defined as:
-* **C:** Cannot work this shift.
-* **U:** Unpreferred shift.
-* **N:** Neutral preference.
+Each employee gives us their availability and preferences. We create an 8x17 preference table in Excel where the entry in the *ith* row, *jth* column represents employee *i*'s preference for shift *j*. The entries are defined as:
 * **P:** Preferred shift.
+* **N:** Neutral preference.
+* **U:** Unpreferred shift.
+* **C:** Cannot work this shift (unavailable).
 
-Automatically, **C** is the assumed preference to desk shifts for shelf employees and shelf shifts for desk employees.
+Automatically, **C** is the assumed preference for desk shifts with shelf-exclusive employees and shelf shifts with desk-exclusive employees. Here is a sample of our preference table.
 
-![image](/assets/images/preftable.png "Sample of the preference table.")
+<img src="/assets/images/preftable.png">
 
 We translate these preferences into numerical scores to be used in the model's objective function.
-* **C** = -1000
-* **U** = -1
-* **N** = 0
 * **P** = 1
+* **N** = 0
+* **U** = -1
+* **C** = -1000
+
+In general, these values are arbitrary. For now, the important point is that preferred shifts are worth more than neutral shifts which are worth more than unpreferred shifts. Unavailable shifts are very negative as to immediately alert us when the schedule is invalid by inspection of the objective score (defined later). Further on, we discuss possible uses of changing the relative weight of these scores.
+
+In another sheet, we have the translated score values. These are the values which will be read into Julia.
 
 ![image](/assets/images/preftable1.png "Sample of the preference table with numerical values.")
 
-Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel files into a Julia Dataframe.
+Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel sheets into Julia DataFrames. We read the staff, shift, and preference score tables.
 
 ```julia
 # get staff, shift, preference tables
@@ -48,8 +50,9 @@ shift_df = DataFrame(Taro.readxl("table.xlsx", "Dictionary", shift_key))
 pref_df  = DataFrame(Taro.readxl("table.xlsx", "PrefMatrix", pref_key, header = false))
 ```
 
-In Julia, we will classify the employees into arrays according to their type and the shifts into arrays according to their type and day of the week. These arrays will make construction of the model constraints easier.
+In Julia, we will classify the employees into arrays according to their type (desk/shelf/both). Similarly, we classify the shifts into arrays according to their type and also day of the week. These arrays will make construction of the model constraints easier later on.
 
+Below is an example of employee classification.
 ```julia
 # categorize staff by their type
 both_staff = Int64[]
@@ -67,15 +70,20 @@ for k in 1:size(staff_df,1)
 end
 ```
 
-We will use the free solver, GLPKSolver, for our model. Our model will maximize an objective function defined as follows:
+We will use GLPKSolver for our optimization. Our model will maximize an objective function defined as follows:
 ```julia
 # maximize preference score sum
 @objective(m, Max, sum(pref_matrix[i,j]*x[i,j] for i in 1:staff, j in 1:shift))
 ```
-In other words, the solver will produce a schedule which tries to maximizes the number of people who get shifts they prefer.
+In other words, the solver will produce a schedule which maximizes the sum of the preference scores of assigned employees (called the objective score).
+* Assigning an employee to a preferred shift adds to the objective score (+1).
+* Assigning an employee to a neutral shift does not change the objective score (0).
+* Assigning an employee to an unpreferred shift subtracts from the objective score (-1).
+* If an employee is assigned to an unavailable shift, the schedule is considered invalid (-1000).
 
+We want as many people as possible to get preferred shifts in order to have a higher objective score.
 
-Next, convert our preference table into a preference matrix and define a binary assignment matrix. This is the variable to be optimized in the model. Note that *staff* represents the total number of employees and *shift* represents the total number of shifts. They are 8 and 17 respectively but can easily be changed to account for variations in the scheduling problem.
+Next, we convert our preference score table into a preference score matrix and we define a binary assignment matrix. This is the variable to be optimized in the model. Note that `staff` represents the total number of employees and `shift` represents the total number of shifts. They are 8 and 17 respectively but automatically update when the number of employees/shifts changes in the Excel sheet.
 
 ```julia
 # staff x shift binary assignment matrix
@@ -83,13 +91,15 @@ Next, convert our preference table into a preference matrix and define a binary 
 @variable(m, x[1:staff, 1:shift], Bin)
 ```
 
-Continuing, we can now define the hard constraints of our model. A valid schedule cannot violate these constraints. These can be generally interpreted as sums of rows or columns in our assignment matrix. Code for the first constraint is shown as an example (see GitHub for the rest).
+Continuing, we can now define the hard constraints of our model. A valid schedule cannot violate these constraints. Code for the first and fourth constraint are shown as examples (see GitHub for the rest).
 ### Constraints
 1. There is exactly one person per shift.
 ```julia
 for j in 1:shift
     @constraint(m, sum( x[i,j] for i in 1:staff) == 1)
 end
+# in the assignment matrix, the sum of each column should be exactly 1
+# since each column represents a shift and those assigned to it
 ```
 2. Each person works a maximum four shifts per week.
 3. Each person works a minimum one shift per week.
@@ -98,6 +108,8 @@ end
 for i in 1:staff
     @constraint(m, sum( x[i,j] for j in union(sat_shift,sun_shift)) <= 1)
 end
+# here we use the category arrays from earlier to construct this constraint easily
+# rather than manually enumerating the j-value of sat/sun shifts
 ```
 5. Desk employees cannot work shelving shifts.
 6. Shelving employees cannot work desk shifts.
@@ -107,33 +119,33 @@ Finally, we run the solver and write the results into a DataFrame.
 
 ```
 Objective value: 1.0
-17×3 DataFrame
-│ Row │ Employee │ Shift │ Score │
-│     │ Int64    │ Int64 │ Int64 │
-├─────┼──────────┼───────┼───────┤
-│ 1   │ 1        │ 6     │ -1    │
-│ 2   │ 1        │ 8     │ -1    │
-│ 3   │ 1        │ 14    │ 0     │
-│ 4   │ 2        │ 9     │ 0     │
-│ 5   │ 2        │ 11    │ 0     │
-│ 6   │ 2        │ 13    │ 0     │
-│ 7   │ 2        │ 16    │ 0     │
-│ 8   │ 3        │ 3     │ 1     │
-│ 9   │ 4        │ 1     │ 1     │
-│ 10  │ 4        │ 2     │ 1     │
-│ 11  │ 4        │ 5     │ 0     │
-│ 12  │ 5        │ 4     │ 0     │
-│ 13  │ 6        │ 10    │ 0     │
-│ 14  │ 6        │ 15    │ 0     │
-│ 15  │ 7        │ 12    │ 0     │
-│ 16  │ 7        │ 17    │ 0     │
-│ 17  │ 8        │ 7     │ 0     │
+17×7 DataFrame
+│ Row │ Employee │ Name   │ Shift │ Day    │ Time        │ Type   │ Score │
+│     │ Int64    │ String │ Int64 │ String │ String      │ String │ Int64 │
+├─────┼──────────┼────────┼───────┼────────┼─────────────┼────────┼───────┤
+│ 1   │ 1        │ VG     │ 6     │ Mon    │ 10:00-14:00 │ shelf  │ -1    │
+│ 2   │ 1        │ VG     │ 8     │ Tue    │ 10:00-14:00 │ shelf  │ -1    │
+│ 3   │ 1        │ VG     │ 14    │ Fri    │ 10:00-16:30 │ shelf  │ 0     │
+│ 4   │ 2        │ ND     │ 9     │ Tue    │ 16:30-20:30 │ shelf  │ 0     │
+│ 5   │ 2        │ ND     │ 11    │ Wed    │ 16:30-20:30 │ shelf  │ 0     │
+│ 6   │ 2        │ ND     │ 13    │ Thu    │ 16:30-20:30 │ shelf  │ 0     │
+│ 7   │ 2        │ ND     │ 16    │ Sun    │ 10:00-14:00 │ shelf  │ 0     │
+│ 8   │ 3        │ KP     │ 3     │ Fri    │ 13:30-17:30 │ desk   │ 1     │
+│ 9   │ 4        │ JP     │ 1     │ Mon    │ 10:00-14:00 │ desk   │ 1     │
+│ 10  │ 4        │ JP     │ 2     │ Thu    │ 13:30-17:30 │ desk   │ 1     │
+│ 11  │ 4        │ JP     │ 5     │ Sun    │ 12:00-16:00 │ desk   │ 0     │
+│ 12  │ 5        │ EV     │ 4     │ Sat    │ 12:00-16:00 │ desk   │ 0     │
+│ 13  │ 6        │ DB     │ 10    │ Wed    │ 10:00-14:00 │ shelf  │ 0     │
+│ 14  │ 6        │ DB     │ 15    │ Sat    │ 10:00-16:30 │ shelf  │ 0     │
+│ 15  │ 7        │ WA     │ 12    │ Thu    │ 10:00-14:00 │ shelf  │ 0     │
+│ 16  │ 7        │ WA     │ 17    │ Sun    │ 10:00-16:30 │ shelf  │ 0     │
+│ 17  │ 8        │ TF     │ 7     │ Mon    │ 16:30-20:30 │ shelf  │ 0     │
 ```
 
-We see that a possible optimal schedule (there could be others with objective value 1.0) only assigns employee 1 to unpreferred shifts. In general, most employees are satisfied considering our original preference matrix had very few **P** entries.
+We see that a possible optimal schedule (there could be others with objective value 1.0, but certainly none greater) only assigns VG to unpreferred shifts. However, most employees are satisfied in general considering our original preference matrix had very few **P** entries.
 
 ### Future extensions:
-* Generally, desk shifts have higher pay than shelving shifts. Thus, those who can work both may want to be guaranteed a desk shift. If we look at the current schedule, employee 2 is relegated to picking up the left-over shelving shifts.
+* Generally, desk shifts have higher pay than shelving shifts. Thus, those who can work both may want to be guaranteed a desk shift. If we look at the current schedule, VG and ND are relegated to picking up the left-over shelving shifts.
 * A full-time employee goes on vacation and leaves five new shifts to be covered or a new part-time employee is hired. This will test how easy it is to update the system to account for changes to the number of staff or shifts.
 
 ### Future improvements:
