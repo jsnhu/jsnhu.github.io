@@ -27,7 +27,7 @@ Each employee gives us their availability and preferences. We create an 8x17 pre
 
 Automatically, **C** is the assumed preference with desk shifts for shelf-exclusive employees and shelf shifts for desk-exclusive employees. Here is a sample of our preference table.
 
-<img src="/assets/images/preftable.png">
+<img src="/assets/images/newpref.PNG">
 
 We translate these preferences into numerical scores to be used in the model's objective function.
 * **P** = 1
@@ -39,8 +39,7 @@ In general, these values are arbitrary. For now, the important point is that pre
 
 In another sheet, we have the translated score values. These are the values which will be read into Julia.
 
-<img src="/assets/images/preftable1.png">
-<img src="/assets/images/shifttable.PNG">
+<img src="/assets/images/newpref1.PNG">
 
 Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel sheets into Julia DataFrames. We read the staff, shift, and preference score tables.
 
