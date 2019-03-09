@@ -25,7 +25,7 @@ Each employee gives us their availability and preferences. We create an 8x17 pre
 * **U:** Unpreferred shift.
 * **C:** Cannot work this shift (unavailable).
 
-Automatically, **C** is the assumed preference for desk shifts with shelf-exclusive employees and shelf shifts with desk-exclusive employees. Here is a sample of our preference table.
+Automatically, **C** is the assumed preference with desk shifts for shelf-exclusive employees and shelf shifts for desk-exclusive employees. Here is a sample of our preference table.
 
 <img src="/assets/images/preftable.png">
 
