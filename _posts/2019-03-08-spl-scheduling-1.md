@@ -1,6 +1,6 @@
 ---
-title:  "Library shift scheduling with Excel/JuMP"
-published: false
+title:  "Test post: Library shift scheduling with Excel/JuMP"
+published: true
 share: false
 ---
 
@@ -15,40 +15,11 @@ The Squamish Public Library has eight part-time employees who must cover sevente
 * Three employees can *only* work shelving shifts: DB, WA, TF.
 * Two employees can work *either* desk or shelving shifts: VG, ND.
 
-We assign labels to the employees as follows:
+We have an Excel sheet which contains all of the data about employees and shifts called "Dictionary" where we enumerate the employees with a value *i* and shifts with a value *j*.
 
-| i | Name | Type  |
-|---|------|-------|
-| 1 | VG   | both  |
-| 2 | ND   | both  |
-| 3 | KP   | desk  |
-| 4 | JP   | desk  |
-| 5 | EV   | desk  |
-| 6 | DB   | shelf |
-| 7 | WA   | shelf |
-| 8 | TF   | shelf |
 
-We assign labels to the seventeen shifts in the week:
+<img src="/assets/images/dictionarysheet.png">
 
-| j  | Day | Time        | Type  |
-|----|-----|-------------|-------|
-| 1  | Mon | 10:00-14:00 | desk  |
-| 2  | Thu | 13:30-17:30 | desk  |
-| 3  | Fri | 13:30-17:30 | desk  |
-| 4  | Sat | 12:00-16:00 | desk  |
-| 5  | Sun | 12:00-16:00 | desk  |
-| 6  | Mon | 10:00-14:00 | shelf |
-| 7  | Mon | 16:30-20:30 | shelf |
-| 8  | Tue | 10:00-14:00 | shelf |
-| 9  | Tue | 16:30-20:30 | shelf |
-| 10 | Wed | 10:00-14:00 | shelf |
-| 11 | Wed | 16:30-20:30 | shelf |
-| 12 | Thu | 10:00-14:00 | shelf |
-| 13 | Thu | 16:30-20:30 | shelf |
-| 14 | Fri | 10:00-16:30 | shelf |
-| 15 | Sat | 10:00-16:30 | shelf |
-| 16 | Sun | 10:00-14:00 | shelf |
-| 17 | Sun | 10:00-16:30 | shelf |
 
 We create an 8x17 preference table in Excel where the entry in the *ith* row, *jth* column represents employee *i*'s preference for shift *j*. The entries are defined as:
 * **C:** Cannot work this shift.
@@ -58,7 +29,7 @@ We create an 8x17 preference table in Excel where the entry in the *ith* row, *j
 
 Automatically, **C** is the assumed preference to desk shifts for shelf employees and shelf shifts for desk employees.
 
-<img src="/assets/images/preftable.PNG">
+![image](/assets/images/preftable.png "Sample of the preference table.")
 
 We translate these preferences into numerical scores to be used in the model's objective function.
 * **C** = -1000
@@ -66,7 +37,7 @@ We translate these preferences into numerical scores to be used in the model's o
 * **N** = 0
 * **P** = 1
 
-<img src="/assets/images/preftable1.PNG">
+![image](/assets/images/preftable1.png "Sample of the preference table with numerical values.")
 
 Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel files into a Julia Dataframe.
 
