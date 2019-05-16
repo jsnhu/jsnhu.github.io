@@ -17,7 +17,7 @@ The Squamish Public Library has eight part-time employees who must cover sevente
 
 We have an Excel sheet which contains all of the data about employees and shifts called "Dictionary" where we enumerate the employees with a value *i* and shifts with a value *j*.
 
-<img src="/assets/images/dictionarysheet.png">
+<img src="/assets/images/spl-scheduling/dictionarysheet.png">
 
 Each employee gives us their availability and preferences. We create an 8x17 preference table in Excel where the entry in the *ith* row, *jth* column represents employee *i*'s preference for shift *j*. The entries are defined as:
 * **P:** Preferred shift.
@@ -27,7 +27,7 @@ Each employee gives us their availability and preferences. We create an 8x17 pre
 
 Automatically, **C** is the assumed preference with desk shifts for shelf-exclusive employees and shelf shifts for desk-exclusive employees. Here is a sample of our preference table.
 
-<img src="/assets/images/newpref.PNG">
+<img src="/assets/images/spl-scheduling/newpref.PNG">
 
 We translate these preferences into numerical scores to be used in the model's objective function.
 * **P** = 1
@@ -39,7 +39,7 @@ In general, these values are arbitrary. For now, the important point is that pre
 
 In another sheet, we have the translated score values. These are the values which will be read into Julia.
 
-<img src="/assets/images/newpref1.PNG">
+<img src="/assets/images/spl-scheduling/newpref1.PNG">
 
 Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read Excel sheets into Julia DataFrames. We read the staff, shift, and preference score tables.
 
@@ -146,9 +146,6 @@ We see that a possible optimal schedule (there could be others with objective va
 
 ### Future extensions:
 * Generally, desk shifts have higher pay than shelving shifts. Thus, those who can work both may want to be guaranteed a desk shift. If we look at the current schedule, VG and ND are relegated to picking up the left-over shelving shifts.
-* A full-time employee goes on vacation and leaves five new shifts to be covered or a new part-time employee is hired. This will test how easy it is to update the system to account for changes to the number of staff or shifts.
 
 ### Future improvements:
-* Write the end result to an Excel sheet.
-* Automatically read the boundaries of the preference, staff, and shift tables in Excel to avoid manual inputting of cell ranges.
-* Eventually migrate to Google Spreadsheet to use preference updating with Google Forms and easy creation of a Google Calendar.
+* Eventually migrate to Google Spreadsheet to use preference updating with Google Forms and allow for easy creation of a Google Calendar.
