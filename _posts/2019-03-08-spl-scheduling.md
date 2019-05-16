@@ -1,5 +1,5 @@
 ---
-title:  "Library shift scheduling with Excel/JuMP"
+title:  "Predetermined shift scheduling with Excel/JuMP: Squamish Public Library"
 published: true
 share: false
 ---
