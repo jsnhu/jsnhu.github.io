@@ -69,7 +69,7 @@ for k in 1:size(staff_df,1)
     end
 end
 ```
-
+### Objective Function
 We will use GLPKSolver for our optimization. Our model will maximize an objective function defined as follows:
 ```julia
 # maximize preference score sum
