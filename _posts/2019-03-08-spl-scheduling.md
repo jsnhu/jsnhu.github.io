@@ -148,4 +148,4 @@ We see that a possible optimal schedule (there could be others with objective va
 * Generally, desk shifts have higher pay than shelving shifts. Thus, those who can work both may want to be guaranteed a desk shift. If we look at the current schedule, VG and ND are relegated to picking up the left-over shelving shifts.
 
 ### Future improvements:
-* Eventually migrate to Google Spreadsheet to use preference updating with Google Forms and allow for easy creation of a Google Calendar.
+* Eventually migrate to Google Spreadsheet to use preference updating with Google Forms which may facilitate easy creation of a Google Calendar.
