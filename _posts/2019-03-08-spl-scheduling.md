@@ -8,7 +8,7 @@ share: false
 
 [See my GitHub for the Excel sheet and full Julia code.](https://github.com/jsnhu/spl-schedule)
 
-## Problem Specifications
+### Problem Specifications
 
 The Squamish Public Library has eight part-time employees who must cover seventeen different shifts throughout the week. These library shifts are classified into two types: shelving shifts and circulation (desk) shifts. Certain employees can only work certain shifts. We refer to these employees by their initials:
 * Three employees can *only* work desk shifts: KP, JP, EV.
@@ -35,7 +35,7 @@ We translate these preferences into numerical scores to be used in the model's o
 * **U** = -1
 * **C** = -1000
 
-In general, these values are arbitrary. For now, the important point is that preferred shifts are worth more than neutral shifts which are worth more than unpreferred shifts. Unavailable shifts are very negative as to immediately alert us when the schedule is invalid by inspection of the objective score (defined later). Further on, we discuss possible uses of changing the relative weight of these scores.
+In general, these values are arbitrary. For now, the important point is that preferred shifts are worth more than neutral shifts which are worth more than unpreferred shifts. Unavailable shifts are very negative as to immediately alert us when the schedule is invalid by inspection of the objective score (defined later). In the future, we may discuss possible uses of changing the relative weight of these scores.
 
 In another sheet, we have the translated score values. These are the values which will be read into Julia.
 
@@ -115,6 +115,8 @@ end
 6. Shelving employees cannot work desk shifts.
 7. Each person works a maximum one shift per day.
 
+### Result
+
 Finally, we run the solver and write the results into a DataFrame.
 
 ```
@@ -143,6 +145,14 @@ Objective value: 1.0
 ```
 
 We see that a possible optimal schedule (there could be others with objective value 1.0, but certainly none greater) assigns VG to unpreferred shifts. However, most employees are satisfied in general considering our original preference matrix had very few **P** entries.
+
+Taro also allows us to write the assignment matrix into an Excel workbook (Note: the assignment matrix is written into a different workbook than the preferences. Anecdotally, writing into an Excel file may wipe or corrupt the file.)
+
+<img src="/assets/images/spl-scheduling/assnmatrix.PNG">
+
+From the original preference workbook, we can read these values from the assignment workbook for a more readable version of the result.
+
+<img src="/assets/images/spl-scheduling/result.PNG">
 
 ### Future extensions:
 * Generally, desk shifts have higher pay than shelving shifts. Thus, those who can work both may want to be guaranteed a desk shift. If we look at the current schedule, VG and ND are relegated to picking up the left-over shelving shifts.
