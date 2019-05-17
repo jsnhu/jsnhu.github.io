@@ -17,7 +17,7 @@ The Squamish Public Library has eight part-time employees who must cover sevente
 
 We have an Excel sheet which contains all of the data about employees and shifts called "Dictionary" where we enumerate the employees with a value *i* and shifts with a value *j*.
 
-<img src="/assets/images/spl-scheduling/dictionarysheet.png">
+<img src="/assets/images/spl-scheduling/dictionarysheet2.png">
 
 Each employee gives us their availability and preferences. We create an 8x17 preference table in Excel where the entry in the *ith* row, *jth* column represents employee *i*'s preference for shift *j*. The entries are defined as:
 * **P:** Preferred shift.
