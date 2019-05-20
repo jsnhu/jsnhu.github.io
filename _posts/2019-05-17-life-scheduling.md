@@ -8,7 +8,7 @@ share: false
 
 [See my GitHub for the Excel sheet and full Julia code.](https://github.com/jsnhu/life-collegium-schedule)
 
-This scheduling problem is much more exciting than [my first project](https://jsnhu.github.io/spl-scheduling/) because of the nature of flexible shifts. In a predetermined shift problem, the shifts are decided first and then employees provide their availability only for those shifts. However, for this flexible shift problem, employees first give their availability for all relevant working hours. Then, the shifts are created based on employee availability (and on various constraints).
+This scheduling problem is much more exciting than [my first project](https://jsnhu.github.io/spl-scheduling/) because of the nature of flexible shifts. In a predetermined shift problem, the shifts are decided first and then employees provide their availability for those shifts. However, in a flexible shift problem, employees give their availability for all relevant working hours first. Then, the shifts are created based on employee availability (and on various constraints).
 
 In creating a flexible assignment model, the optimization variable, objective function, and constraints become much more interesting. Since employees now give their availability for time and day instead of simple set shifts, the data can naturally be represented with an extra dimension. The objective function must now reward continuous shifts to avoid scattered, "swiss-cheese" schedules. Finally, there are new constraint considerations such as minimum shift length.
 
@@ -42,7 +42,7 @@ The schedule takes into account:
 
 The [LIFE Collegium](https://students.ubc.ca/new-to-ubc/ubc-collegia-home-away-home-first-year-commuter) is open from Monday to Friday, 08:00 to 19:00. We break each day into 22 half-hour slots. For each day, the first shift (08:00) is the opening shift and the last or 22nd shift (18:30) is the closing shift.
 
-There are eight "Collegia Advisors" (CAs) who are employed to supervise and work at LIFE. One CA is designated as the "Senior CA" and has special scheduling considerations different from the other seven ("CA" will henceforth refer to the seven "regular" CAs and the "Senior CA" will explicitly be referred to as such).
+There are eight "Collegia Advisors" (CAs) who are employed to supervise and work at LIFE Collegium. One CA is designated as the "Senior CA" and has special scheduling considerations different from the other seven ("CA" will henceforth refer to the seven "regular" CAs and the "Senior CA" will explicitly be referred to as such).
 
 ### Regular CAs
 
