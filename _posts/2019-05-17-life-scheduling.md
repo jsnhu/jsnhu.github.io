@@ -8,10 +8,15 @@ share: false
 
 [See my GitHub for the Excel sheet and full Julia code.](https://github.com/jsnhu/life-collegium-schedule)
 
-This scheduling problem is significantly more interesting than [my first project](https://jsnhu.github.io/spl-scheduling/) because of the nature of flexible shifts. In a predetermined shift problem, the shifts are decided first and then employees provide their availability only for those shifts. However, for this flexible shift problem, employees first give their availability for all relevant working hours. Then, the shifts are created based on these working hours (and on various constraints).
+This scheduling problem is significantly more interesting than [my first project](https://jsnhu.github.io/spl-scheduling/) because of the nature of flexible shifts. In a predetermined shift problem, the shifts are decided first and then employees provide their availability only for those shifts. However, for this flexible shift problem, employees first give their availability for all relevant working hours. Then, the shifts are created based on employee availability (and on various constraints).
 
-### Quick Overview
+### A Very Quick Overview
 
+Employees provide their availability and preferences for the week within a timetable. Every employee's availability timetable is collected on a common Excel sheet like so:
+<img src="/assets/images/life-scheduling/av2.PNG">
+The values above denote the following:
+
+<img src="/assets/images/life-scheduling/legend1.PNG">
 ### Problem Specifications
 
 <img src="/assets/images/life-scheduling/">
