@@ -38,7 +38,9 @@ The schedule takes into account:
 * A collective meeting time in which all employees are scheduled.
 
 ### Problem Specifications
+*The problem is described with respect to the needs of UBC LIFE Collegium 2018-19, but serves as a basic framework for flexible shift scheduling.*
 
+The LIFE Collegium is open from Monday to Friday, 08:00 to 19:00. We break each day into 22 half-hour shifts. For each day, the first shift (08:00) is the opening shift and the last or 22nd shift (18:30) is the closing shift.
 <img src="/assets/images/life-scheduling/">
 
 
