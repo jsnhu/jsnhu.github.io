@@ -255,7 +255,7 @@ Like with our SPL schedule, we can also use Taro to write the result to Excel (i
 
 <img src="/assets/images/life-scheduling/output2.PNG">
 
-We see that in the end, no one was available for certain shifts on Tuesday, so a substitute is required. In general, the schedules look nice with minimal swiss-cheesing, so our objective function did its job nicely!
+We see that in the end, no one was available for certain shifts on Tuesday, so a substitute is required. In general, the schedules look good with minimal swiss-cheesing, so our objective function did its job nicely!
 
 ## Extensions and Improvements
 * Find a way to scale the minimum shift length constraint.
@@ -265,3 +265,4 @@ We see that in the end, no one was available for certain shifts on Tuesday, so a
 * Investigate different relative weights of preferences and different bonuses for the continuous reward.
 * Investigate different ways to encourage continuous shifts.
 * Explore ways to reward different people working opening/closing shifts.
+* Output the other possible (sub-)optimal solutions.
