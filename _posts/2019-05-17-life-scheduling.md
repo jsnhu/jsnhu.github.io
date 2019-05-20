@@ -48,23 +48,23 @@ There are eight "Collegia Advisors" (CAs) who are employed to supervise and work
 
 Each CA provides a timetable of their availability and preferences using the following numerical system:
 
-<img src="/assets/images/life-scheduling/legend1.png">
+<img src="/assets/images/life-scheduling/legend1.PNG">
 
 Each provides a 22 x 5 table like so:
 
-<img src="/assets/images/life-scheduling/av3.png">
+<img src="/assets/images/life-scheduling/av3.PNG">
 
 (Note: CAs are UBC students so blocks of unavailability are often classes.)
 
 We collect all of the employee availability timetables into one Excel sheet.
 
-<img src="/assets/images/life-scheduling/av2.png">
+<img src="/assets/images/life-scheduling/av2.PNG">
 
 ### The Senior CA
 
 Our scheduling methodology is to accommodate the seven CAs as best as possible and then schedule the Senior CA to pick up any leftover shifts. Hence, our output will only schedule the Senior CA when absolutely necessary. To do this, the Senior CA's timetable will appear as such:
 
-<img src="/assets/images/life-scheduling/seniorca.png">
+<img src="/assets/images/life-scheduling/seniorca.PNG">
 
 Excluding unavailable times, (-5) is the blanket availability score. Essentially, the Senior CA should only be assigned to slots that are highly negative (-99 or -100) for the other CAs and not when other CAs are available (with a score greater than or equal to 0).
 
@@ -74,7 +74,7 @@ The model does not force a minimum number of working hours for the Senior CA. Th
 
 It is possible that none of the CAs or the Senior CA can work a certain time slot (which occurred in 2018-19 Term 2). In this case, a "substitute" or "placeholder CA" is required. This placeholder (called "Xx") has the following timetable:
 
-<img src="/assets/images/life-scheduling/xx.png">
+<img src="/assets/images/life-scheduling/xx.PNG">
 
 The blanket (-50) availability score ensures that they are only assigned when all other staff members have scores of (-100) or (-99). The final output will show which hours, if any, a substitute must be hired.
 
@@ -83,7 +83,7 @@ In our Excel sheet, Xx is always the first timetable, followed by the Senior CA,
 
 The number of employees must be manually entered into cell B27 so as to tell the program how far to read into the sheet. B28, which includes the placeholder, is ultimately read by the program and becomes `staff`.
 
-<img src="/assets/images/life-scheduling/details.png">
+<img src="/assets/images/life-scheduling/details.PNG">
 
 Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read the tables in Excel into Julia arrays. We take advantage of the even spacing of the 22 x 5 tables to obtain the amount specified in B28.
 
@@ -139,7 +139,7 @@ Our objective function, similar to the SPL objective function, will be the sum o
 
 However, with our objective function, we also have to reward continuous shifts in order to avoid "swiss-cheese" schedules like
 
- <img src="/assets/images/life-scheduling/cheese.png">
+ <img src="/assets/images/life-scheduling/cheese.PNG">
 
  Assignment of any given shift provides opportunity for the adjacent shifts (the half-hour shift before and after) to receive a bonus. This bonus will be a multiplier (of some positive value). For example, if Mon 11:00 is assigned, then assigning 10:30 or 11:30 can multiply the availability score of those shifts by the bonus, making continuous shifts highly rewarding. Here, we choose the bonus to be 10 (arbitrarily chosen with respect to the availability scores).
 
@@ -171,11 +171,11 @@ In the future, we may experiment with different bonus multipliers and bonus mult
 
 Note that we do not want to an outright ban of assignment structures such as
 
-<img src="/assets/images/life-scheduling/cheese2.png">
+<img src="/assets/images/life-scheduling/cheese2.PNG">
 
 We see that this employee's corresponding availability looks like
 
-<img src="/assets/images/life-scheduling/cheese3.png">
+<img src="/assets/images/life-scheduling/cheese3.PNG">
 
 Hence, this CA has an obligation for a half-hour, yet would like to before and after this unavailability. Our continuous shift reward ensures that this type of assignment is not impossible, and only used when necessary.  
 
@@ -253,7 +253,7 @@ Objective value: 5625.0
 
 Like with our SPL schedule, we can also use Taro to write the result to Excel (in another workbook as a safeguard against corrupting the availability file). Reading this result from our original Excel file gives a more human-friendly view of the result:
 
-<img src="/assets/images/life-scheduling/output2.png">
+<img src="/assets/images/life-scheduling/output2.PNG">
 
 We see that in the end, no one was available for certain shifts on Tuesday, so a substitute is required. In general, the schedules look nice with minimal swiss-cheesing, so our objective function did its job nicely!
 
