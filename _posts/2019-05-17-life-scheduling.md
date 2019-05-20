@@ -8,9 +8,9 @@ share: false
 
 [See my GitHub for the Excel sheet and full Julia code.](https://github.com/jsnhu/life-collegium-schedule)
 
-This scheduling problem is significantly more exciting than [my first project](https://jsnhu.github.io/spl-scheduling/) because of the nature of flexible shifts. In a predetermined shift problem, the shifts are decided first and then employees provide their availability only for those shifts. However, for this flexible shift problem, employees first give their availability for all relevant working hours. Then, the shifts are created based on employee availability (and on various constraints).
+This scheduling problem is much more exciting than [my first project](https://jsnhu.github.io/spl-scheduling/) because of the nature of flexible shifts. In a predetermined shift problem, the shifts are decided first and then employees provide their availability only for those shifts. However, for this flexible shift problem, employees first give their availability for all relevant working hours. Then, the shifts are created based on employee availability (and on various constraints).
 
-In creating a flexible assignment model, the optimization variable, objective function, and constraints become much more interesting. Since employees now give their availability for time and day instead of simple set shifts, the data can naturally be represented with another dimension. The objective function must now reward continuous shifts to avoid scattered, illogical schedules (e.g. 1 hr shift, 1 hr break, 1 hr shift, 1 hr break, 1 hr shift). Finally, constraints must consider minimum shift length and number of opening/closing shifts.
+In creating a flexible assignment model, the optimization variable, objective function, and constraints become much more interesting. Since employees now give their availability for time and day instead of simple set shifts, the data can naturally be represented with an extra dimension. The objective function must now reward continuous shifts to avoid scattered, "swiss-cheese" schedules. Finally, there are new constraint considerations such as minimum shift length.
 
 ### A Very Quick Overview
 
@@ -29,6 +29,14 @@ Now, the assignment problem is solved with Gurobi and JuMP. The finished schedul
 Here, the shifts are shown as follows:
 
 <img src="/assets/images/life-scheduling/legend2.PNG">
+
+The schedule takes into account:
+* Minimum shift length
+* Maximum number of opening/closing shifts
+* Maximum/minimum weekly working hours
+* Maximum/minimum number of employees working a given timeslot
+* A collective meeting time in which all employees are scheduled.
+
 ### Problem Specifications
 
 <img src="/assets/images/life-scheduling/">
