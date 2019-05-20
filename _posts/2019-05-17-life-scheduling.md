@@ -81,11 +81,11 @@ The blanket (-50) availability score ensures that they are only assigned when al
 ## Reading into Julia with Taro
 In our Excel sheet, Xx is always the first timetable, followed by the Senior CA, then the rest of the CAs in arbitrary order.
 
-The number of employees must be manually entered into cell B27 so as to tell the program how far to read into the sheet. B28, which includes the placeholder, is ultimately read by the program and becomes `staff`.
+The number of employees must be manually entered into cell C27 so as to tell the program how far to read into the sheet. C28, which automatically includes the placeholder, is ultimately read by the program and becomes `staff`.
 
 <img src="/assets/images/life-scheduling/details.PNG">
 
-Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read the tables in Excel into Julia arrays. We take advantage of the even spacing of the 22 x 5 tables to obtain the amount specified in B28.
+Now, we use the [Taro](https://github.com/aviks/Taro.jl) package to read the tables in Excel into Julia arrays. We take advantage of the even spacing of the 22 x 5 tables to obtain the amount specified in C28.
 
 ```julia
 # get staff availability tables
@@ -177,7 +177,7 @@ We see that this employee's corresponding availability looks like
 
 <img src="/assets/images/life-scheduling/cheese3.PNG">
 
-Hence, this CA has an obligation for a half-hour, yet would like to before and after this unavailability. Our continuous shift reward ensures that this type of assignment is not impossible, and only used when necessary.  
+Hence, this CA has an obligation for a half-hour, yet would like to work before and after this unavailability. Our continuous shift reward ensures that this type of assignment is not impossible, and only used when necessary.  
 
 ### Constraints
 
@@ -186,7 +186,7 @@ Refer to GitHub for the complete code. We explicitly explore some of the constra
     * Each CA works exactly 10 hours in a week.
     * The Senior CA works maximum 13 hours in a week.
     * The Senior CA works maximum 2 opening/closing shifts in a week.
-        * This is not a hard constraint provided by LIFE Collegium. Generally, CAs do not like opening/closing (as I've been told first-hand during my time at LIFE). Hence, most people would assign opening/closing shifts 0 or -5. The resulting output would tend to assign them other shifts which maximized the availability scores. In the end, the Senior CA was left picking up the many opening/closing shifts. The hard limit of 2 is to avoid this. Another way to do this is guarantee each CA works a certain amount of opening/closing shifts.
+        * This is not a hard constraint provided by LIFE Collegium. Generally, CAs do not like opening/closing (as I've been told first-hand during my time at LIFE). Hence, most people would assign opening/closing shifts (0) or (-5). The resulting output would tend to assign them other shifts which maximized the availability scores. In the end, the Senior CA was left picking up the many opening/closing shifts. The hard limit of 2 is to avoid this. Another way to do this is guarantee each CA works a certain amount of opening/closing shifts.
 2. Number of workers constraints
     * There are 1 - 2 people working at any given time.
         * Exceptions: opening/closing, weekly meeting.
@@ -215,7 +215,7 @@ end
 
 In essence, the sum of the two adjacent shifts must be greater than the shift itself. It works out for all of the assignment cases for three adjacent shifts that this is equivalent to the conditional described above. Whether or not this type of translation of conditional and disjunction into a sum and inequality can scale up to say, 90 minute shifts and so on is an interesting point of further exploration. For now, this manages the job just fine, if only by sheer chance.
 
-As of yet, the 4 hour maximum constraint seemed to be unnecessary so it is not included. For completeness, this will added in the future.
+As of yet, the 4 hour maximum constraint has been unnecessary so it is not included. For completeness, this will be added in the future.
 
 ### Result
 After running the solver, we can collect the assignments to each timeslot and see how much overlap there is:
