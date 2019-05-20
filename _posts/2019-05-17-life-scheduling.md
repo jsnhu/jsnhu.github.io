@@ -125,7 +125,7 @@ for k in 1:staff
 end
 ```
 ## Model
-We use Gurobi for our model.
+We use Gurobi for our model since it supports our quadratic objective function.
 ### Variable
 Our binary assignment variable is defined as follows:
 
