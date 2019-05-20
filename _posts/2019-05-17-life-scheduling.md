@@ -108,6 +108,8 @@ for i in 0:staff - 1
 end
 ```
 
+Each employee is now enumerated with a value k (1 to 9). Importantly, k = 1 represents the placeholder and k = 2 represents the Senior CA.
+
 Unlike the 2-dimensional availability array in the SPL scheduling project, this availability array is 3-dimensional (22 slots/day x 5 days x 9 employees):
 
 ```julia
@@ -123,9 +125,9 @@ for k in 1:staff
 end
 ```
 ### Model
-
+We use Gurobi for our model.
 #### Variable
-We use Gurobi for our model. Our binary assignment variable is defined as follows:
+Our binary assignment variable is defined as follows:
 
 ```julia
 # 22 x 5 x staff binary assignment 3d matrix
@@ -133,7 +135,133 @@ We use Gurobi for our model. Our binary assignment variable is defined as follow
 @variable(m, x[1:22, 1:5, 1:staff], Bin)
 ```
 #### Objective Function
+Our objective function, similar to the SPL objective function, will be the sum of the availability scores of assigned shifts to represent how "preferred" a schedule is. The more people who get shifts they want, the higher the sum of the scores.
+
+However, with our objective function, we also have to reward continuous shifts in order to avoid "swiss-cheese" schedules like
+
+ <img src="/assets/images/life-scheduling/cheese.png">
+
+ Assignment of any given shift provides opportunity for the adjacent shifts (the half-hour shift before and after) to receive a bonus. This bonus will be a multiplier (of some positive value). For example, if Mon 11:00 is assigned, then assigning 10:30 or 11:30 can multiply the availability score of those shifts by the bonus, making continuous shifts highly rewarding. Here, we choose the bonus to be 10 (arbitrarily chosen with respect to the availability scores).
+
+ ```julia
+ # objective: rewards continuous shifts
+ # special cases k = 1 (placeholder)
+ #               k = 2 (Senior CA)
+
+ @objective(m, Max,
+     sum(av_matrix[i, j, k] * x[i, j, k] +
+         x[i, j, k]  * (10 * av_matrix[i + 1, j, k] * x[i + 1, j, k]
+                     +  10 * av_matrix[i - 1, j, k] * x[i - 1, j, k])
+         for i in 2:21, j in 1:5, k in 3:staff)
+     # special cases k = 1,2
+     + sum(av_matrix[i, j, k] * x[i, j, k] for i in 1:22, j in 1:5, k in 1:2))
+ ```
+Note that the placeholder and Senior CA are exempt from this continuous reward.
+
+Ideally, this will promote shift clustering so as to use the bonus as much as possible. We see how the number of bonus multipliers grows:
+
+| Continuous  shifts | Occurrences of  bonus multiplier |
+|--------------------|----------------------------------|
+| 1                  | 0                                |
+| 2                  | 2                                |
+| 3                  | 4                                |
+| n                  | 2(n - 1)                         |
+
+In the future, we may experiment with different bonus multipliers and bonus multipliers that reach across two or more shifts. As well, we may investigate other methods of promoting or enforcing continuous shifts.
+
+Note that we do not want to an outright ban of assignment structures such as
+
+<img src="/assets/images/life-scheduling/cheese2.png">
+
+We see that this employee's corresponding availability looks like
+
+<img src="/assets/images/life-scheduling/cheese3.png">
+
+Hence, this CA has an obligation for a half-hour, yet would like to before and after this unavailability. Our continuous shift reward ensures that this type of assignment is not impossible, and only used when necessary.  
+
 #### Constraints
+
+Refer to GitHub for the complete code. We explicitly explore some of the constraints here.
+1. Total time constraints
+    * Each CA works exactly 10 hours in a week.
+    * The Senior CA works maximum 13 hours in a week.
+    * The Senior CA works maximum 2 opening/closing shifts in a week.
+        * This is not a hard constraint provided by LIFE Collegium. Generally, CAs do not like opening/closing (as I've been told first-hand during my time at LIFE). Hence, most people would assign opening/closing shifts 0 or -5. The resulting output would tend to assign them other shifts which maximized the availability scores. In the end, the Senior CA was left picking up the many opening/closing shifts. The hard limit of 2 is to avoid this. Another way to do this is guarantee each CA works a certain amount of opening/closing shifts.
+2. Number of workers constraints
+    * There are 1 - 2 people working at any given time.
+        * Exceptions: opening/closing, weekly meeting.
+    * There is exactly 1 person per opening/closing shift.
+    * All CAs attend the weekly 90 minute meeting.
+        * For 2018-19 Term 2, this was Wed 16:00 - 17:30.
+3. Shift length constraints
+    * Each shift is at least 1 hour long.
+    * Each shift is at most 4 hours long.
+
+The translation of the minimum shift length constraint into code is the most interesting of the bunch. We want to translate the following conditional:
+"If timeslot i is assigned in day j for employee k, then either i - 1 or i + 1 is also assigned for that day and employee." Of course, we need to account for edge cases in which i - 1 is 0 or i + 1 is 23.
+
+Initially, I tried to implement this constraint with [ConditionalJuMP](https://github.com/rdeits/ConditionalJuMP.jl). However the consequent of the conditional being a disjunction proved somewhat troublesome. Later, I found a much more elegant representation of the constraint:
+
+```julia
+# cons3: each shift is at least 1hr
+for i in 2:21
+    for j in 1:5
+        for k in 1:staff
+            @constraint(m, x[i - 1, j, k] + x[i + 1, j, k] >= x[i, j, k])
+        end
+    end
+end
+```
+
+In essence, the sum of the two adjacent shifts must be greater than the shift itself. It works out for all of the assignment cases for three adjacent shifts that this is equivalent to the conditional described above. Whether or not this type of translation of conditional and disjunction into a sum and inequality can scale up to say, 90 minute shifts and so on is an interesting point of further exploration. For now, this manages the job just fine, if only by sheer chance.
+
+As of yet, the 4 hour maximum constraint seemed to be unnecessary so it is not included. For completeness, this will added in the future.
+
 #### Result
-#### Extensions
-### Improvements
+After running the solver, we can collect the assignments to each timeslot and see how much overlap there is:
+
+```julia
+Solution count 5: 5625 5601 5570 ... 1052
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 5.625000000000e+03, best bound 5.625000000000e+03, gap 0.0000%
+Objective value: 5625.0
+22×5 Array{Array{Int64,1},2}:
+ [2]     [4]     [3]                       [6]     [8]
+ [2]     [4]     [3]                       [6]     [8]
+ [2]     [4]     [3]                       [6]     [8]
+ [8]     [2, 4]  [3]                       [2]     [8]
+ [6, 8]  [2]     [6]                       [2]     [6]
+ [6, 8]  [1]     [6]                       [8]     [6]
+ [6, 8]  [1]     [6]                       [8]     [3, 6]
+ [9]     [1]     [2]                       [8]     [3, 9]
+ [7, 9]  [1]     [2]                       [8]     [3, 9]
+ [7, 9]  [1]     [2]                       [8]     [9]
+ [7, 9]  [3]     [7]                       [5, 8]  [9]
+ [5, 7]  [3]     [7]                       [5]     [2]
+ [5]     [3]     [3, 7]                    [5]     [2]
+ [5, 7]  [5, 7]  [3]                       [5, 7]  [2]
+ [5, 7]  [5, 7]  [3]                       [7]     [3]
+ [5, 7]  [5, 7]  [4, 9]                    [7]     [3]
+ [4, 7]  [4, 5]  [2, 3, 4, 5, 6, 7, 8, 9]  [4, 9]  [3]
+ [4, 9]  [4, 5]  [2, 3, 4, 5, 6, 7, 8, 9]  [4, 9]  [3, 6]
+ [4, 9]  [4]     [2, 3, 4, 5, 6, 7, 8, 9]  [4, 9]  [6]
+ [4, 9]  [4]     [8]                       [4]     [5, 6]
+ [9]     [6]     [8]                       [2]     [5]
+ [9]     [6]     [8]                       [2]     [5]
+```
+
+Like with our SPL schedule, we can also use Taro to write the result to Excel (in another workbook as a safeguard against corrupting the availability file). Reading this result from our original Excel file gives a more human-friendly view of the result:
+
+<img src="/assets/images/life-scheduling/output2.png">
+
+We see that in the end, no one was available for certain shifts on Tuesday, so a substitute is required. In general, the schedules look nice with minimal swiss-cheesing, so our objective function did its job nicely!
+
+### Extensions and Improvements
+* Find a way to scale the minimum shift length constraint.
+* Add the maximum shift length constraint.
+* Have a way to visualize the overlapping shifts nicely.
+* Have the weekly meeting time be entered on the main sheet and change in the constraint accordingly.
+* Investigate different relative weights of preferences and different bonuses for the continuous reward.
+* Investigate different ways to encourage continuous shifts.
+* Explore ways to reward different people working opening/closing shifts.
