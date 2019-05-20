@@ -12,7 +12,7 @@ This scheduling problem is much more exciting than [my first project](https://js
 
 In creating a flexible assignment model, the optimization variable, objective function, and constraints become much more interesting. Since employees now give their availability for time and day instead of simple set shifts, the data can naturally be represented with an extra dimension. The objective function must now reward continuous shifts to avoid scattered, "swiss-cheese" schedules. Finally, there are new constraint considerations such as minimum shift length.
 
-### A Very Quick Overview
+## A Very Quick Overview
 
 Employees provide their availability and preferences for the week within a timetable. Every employee's availability timetable is collected on a common Excel sheet like so:
 
@@ -37,14 +37,14 @@ The schedule takes into account:
 * Maximum/minimum number of employees working a given timeslot
 * A collective meeting time in which all employees are scheduled.
 
-### Problem Specifications
+## Problem Specifications
 *The problem is described with respect to the needs of UBC LIFE Collegium 2018-19, but serves as a basic framework for flexible shift scheduling.*
 
 The [LIFE Collegium](https://students.ubc.ca/new-to-ubc/ubc-collegia-home-away-home-first-year-commuter) is open from Monday to Friday, 08:00 to 19:00. We break each day into 22 half-hour slots. For each day, the first shift (08:00) is the opening shift and the last or 22nd shift (18:30) is the closing shift.
 
 There are eight "Collegia Advisors" (CAs) who are employed to supervise and work at LIFE. One CA is designated as the "Senior CA" and has special scheduling considerations different from the other seven ("CA" will henceforth refer to the seven "regular" CAs and the "Senior CA" will explicitly be referred to as such).
 
-#### Regular CAs
+### Regular CAs
 
 Each CA provides a timetable of their availability and preferences using the following numerical system:
 
@@ -60,7 +60,7 @@ We collect all of the employee availability timetables into one Excel sheet.
 
 <img src="/assets/images/life-scheduling/av2.png">
 
-#### The Senior CA
+### The Senior CA
 
 Our scheduling methodology is to accommodate the seven CAs as best as possible and then schedule the Senior CA to pick up any leftover shifts. Hence, our output will only schedule the Senior CA when absolutely necessary. To do this, the Senior CA's timetable will appear as such:
 
@@ -70,7 +70,7 @@ Excluding unavailable times, (-5) is the blanket availability score. Essentially
 
 The model does not force a minimum number of working hours for the Senior CA. The idea is that the Senior CA should assign themselves more slots as they see fit after seeing their "mandated" slots.
 
-#### The Placeholder
+### The Placeholder
 
 It is possible that none of the CAs or the Senior CA can work a certain time slot (which occurred in 2018-19 Term 2). In this case, a "substitute" or "placeholder CA" is required. This placeholder (called "Xx") has the following timetable:
 
@@ -78,7 +78,7 @@ It is possible that none of the CAs or the Senior CA can work a certain time slo
 
 The blanket (-50) availability score ensures that they are only assigned when all other staff members have scores of (-100) or (-99). The final output will show which hours, if any, a substitute must be hired.
 
-### Reading into Julia with Taro
+## Reading into Julia with Taro
 In our Excel sheet, Xx is always the first timetable, followed by the Senior CA, then the rest of the CAs in arbitrary order.
 
 The number of employees must be manually entered into cell B27 so as to tell the program how far to read into the sheet. B28, which includes the placeholder, is ultimately read by the program and becomes `staff`.
@@ -124,9 +124,9 @@ for k in 1:staff
     end
 end
 ```
-### Model
+## Model
 We use Gurobi for our model.
-#### Variable
+### Variable
 Our binary assignment variable is defined as follows:
 
 ```julia
@@ -134,7 +134,7 @@ Our binary assignment variable is defined as follows:
 # 1 if employee k assigned to shift (i,j), 0 otherwise
 @variable(m, x[1:22, 1:5, 1:staff], Bin)
 ```
-#### Objective Function
+### Objective Function
 Our objective function, similar to the SPL objective function, will be the sum of the availability scores of assigned shifts to represent how "preferred" a schedule is. The more people who get shifts they want, the higher the sum of the scores.
 
 However, with our objective function, we also have to reward continuous shifts in order to avoid "swiss-cheese" schedules like
@@ -179,7 +179,7 @@ We see that this employee's corresponding availability looks like
 
 Hence, this CA has an obligation for a half-hour, yet would like to before and after this unavailability. Our continuous shift reward ensures that this type of assignment is not impossible, and only used when necessary.  
 
-#### Constraints
+### Constraints
 
 Refer to GitHub for the complete code. We explicitly explore some of the constraints here.
 1. Total time constraints
@@ -217,7 +217,7 @@ In essence, the sum of the two adjacent shifts must be greater than the shift it
 
 As of yet, the 4 hour maximum constraint seemed to be unnecessary so it is not included. For completeness, this will added in the future.
 
-#### Result
+### Result
 After running the solver, we can collect the assignments to each timeslot and see how much overlap there is:
 
 ```julia
@@ -257,7 +257,7 @@ Like with our SPL schedule, we can also use Taro to write the result to Excel (i
 
 We see that in the end, no one was available for certain shifts on Tuesday, so a substitute is required. In general, the schedules look nice with minimal swiss-cheesing, so our objective function did its job nicely!
 
-### Extensions and Improvements
+## Extensions and Improvements
 * Find a way to scale the minimum shift length constraint.
 * Add the maximum shift length constraint.
 * Have a way to visualize the overlapping shifts nicely.
