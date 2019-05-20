@@ -1,6 +1,6 @@
 ---
 title:  "Flexible shift scheduling with Excel/JuMP: UBC LIFE Collegium"
-published: false
+published: true
 share: false
 ---
 
@@ -22,7 +22,7 @@ The values in the tables denote the following:
 
 <img src="/assets/images/life-scheduling/legend1.PNG">
 
-Now, the assignment problem is solved with Gurobi and JuMP. The finished schedule is produced and read into another sheet within the same workbook.
+Now, the assignment problem is solved with [Gurobi](http://www.gurobi.com/) and [JuMP](https://github.com/JuliaOpt/JuMP.jl). The finished schedule is produced and read into another sheet within the same workbook.
 
 <img src="/assets/images/life-scheduling/output1.PNG">
 
@@ -40,7 +40,7 @@ The schedule takes into account:
 ### Problem Specifications
 *The problem is described with respect to the needs of UBC LIFE Collegium 2018-19, but serves as a basic framework for flexible shift scheduling.*
 
-The LIFE Collegium is open from Monday to Friday, 08:00 to 19:00. We break each day into 22 half-hour slots. For each day, the first shift (08:00) is the opening shift and the last or 22nd shift (18:30) is the closing shift.
+The [LIFE Collegium](https://students.ubc.ca/new-to-ubc/ubc-collegia-home-away-home-first-year-commuter) is open from Monday to Friday, 08:00 to 19:00. We break each day into 22 half-hour slots. For each day, the first shift (08:00) is the opening shift and the last or 22nd shift (18:30) is the closing shift.
 
 There are eight "Collegia Advisors" (CAs) who are employed to supervise and work at LIFE. One CA is designated as the "Senior CA" and has special scheduling considerations different from the other seven ("CA" will henceforth refer to the seven "regular" CAs and the "Senior CA" will explicitly be referred to as such).
 
