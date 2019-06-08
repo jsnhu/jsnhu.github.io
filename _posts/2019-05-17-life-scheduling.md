@@ -135,7 +135,7 @@ Our binary assignment variable is defined as follows:
 @variable(m, x[1:22, 1:5, 1:staff], Bin)
 ```
 ### Objective Function
-Our objective function, similar to the SPL objective function, will be the sum of the availability scores of assigned shifts to represent how "preferred" a schedule is. The more people who get shifts they want, the higher the sum of the scores.
+Our objective function, similar to the SPL objective function, will be the sum of the availability scores of assigned shifts to represent how "preferred" a schedule is. By maximizing this score, in theory more people get shifts they want.
 
 However, with our objective function, we also have to reward continuous shifts in order to avoid "swiss-cheese" schedules like
 
@@ -182,20 +182,22 @@ Hence, this CA has an obligation for a half-hour, yet would like to work before 
 ### Constraints
 
 Refer to GitHub for the complete code. We explicitly explore some of the constraints here.
-1. Total time constraints
-    * Each CA works exactly 10 hours in a week.
-    * The Senior CA works maximum 13 hours in a week.
-    * The Senior CA works maximum 2 opening/closing shifts in a week.
-        * This is not a hard constraint provided by LIFE Collegium. Generally, CAs do not like opening/closing (as I've been told first-hand during my time at LIFE). Hence, most people would assign opening/closing shifts (0) or (-5). The resulting output would tend to assign them other shifts which maximized the availability scores. In the end, the Senior CA was left picking up the many opening/closing shifts. The hard limit of 2 is to avoid this. Another way to do this is guarantee each CA works a certain amount of opening/closing shifts.
-2. Number of workers constraints
-    * There are 1 - 2 people working at any given time.
-        * Exceptions: opening/closing, weekly meeting.
-    * There is exactly 1 person per opening/closing shift.
-    * All CAs attend the weekly 90 minute meeting.
-        * For 2018-19 Term 2, this was Wed 16:00 - 17:30.
-3. Shift length constraints
-    * Each shift is at least 1 hour long.
-    * Each shift is at most 4 hours long.
+#### Total time constraints
+1. Each CA works exactly 10 hours in a week.
+2. The Senior CA works maximum 13 hours in a week.
+3. The Senior CA works maximum 2 opening/closing shifts in a week.
+    * This is not a hard constraint provided by LIFE Collegium. Generally, CAs do not like opening/closing (as I've been told first-hand during my time at LIFE). Hence, most people would assign opening/closing shifts (0) or (-5). The resulting output would tend to assign them other shifts which maximized the availability scores. In the end, the Senior CA was left picking up the many opening/closing shifts. The hard limit of 2 is to avoid this. Another way to do this is guarantee each CA works a certain amount of opening/closing shifts.
+
+#### Number of workers constraints
+1. There are 1 - 2 people working at any given time.
+    * Exceptions: opening/closing, weekly meeting.
+2. There is exactly 1 person per opening/closing shift.
+3. All CAs attend the weekly 90 minute meeting.
+    * For 2018-19 Term 2, this was Wed 16:00 - 17:30.
+
+#### Shift length constraints
+1. Each shift is at least 1 hour long.
+2. Each shift is at most 4 hours long.
 
 The translation of the minimum shift length constraint into code is the most interesting of the bunch. We want to translate the following conditional:
 "If timeslot i is assigned in day j for employee k, then either i - 1 or i + 1 is also assigned for that day and employee." Of course, we need to account for edge cases in which i - 1 is 0 or i + 1 is 23.
