@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "dark" # "air", "aqua", "contrast", "dark", "dirt", "
 
 # Site Settings
 locale                   : "en-CA"
-title                    : "A Finite Field"
+title                    : "It's About Time"
 title_separator          : "-"
 name                     : "Jason Hu"
 description              : "Work in progress."
@@ -108,7 +108,7 @@ analytics:
 author:
   name             : "Jason Hu"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Student at the University of British Columbia."
+  bio              : "BSc. Mathematics at the University of British Columbia."
   location         : "Vancouver, BC"
   email            :
   links:
