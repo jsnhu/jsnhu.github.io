@@ -47,6 +47,7 @@ nav a {
   display: flex;
   flex-direction: row;
   margin: 0;
+  gap: 1rem;
 }
 
 .project-card img {
