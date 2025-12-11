@@ -22,16 +22,33 @@ header {
     justify-content: space-between;
     align-items: baseline;
     border-bottom: 1px solid var(--cobalt);
-    padding-bottom: 0.5rem;
+    padding: max(10px, 2%) 0;
+    position: fixed;
+    top: 0;
+    width: 90%;
+    background: white;
+    z-index: 1000; 
+
 }
 
 
 body {
+    margin-top: 120px;
+
     padding: 0 min(5%, 100px);
 }
+
+html {
+    scroll-padding-top: 80px;
+}
+
+header a, .no-dec {
+    text-decoration: none;
+}
+
 nav a {
     font-weight: 400;
-    margin: 0 1rem;
+    margin-right: 1rem;
     text-decoration: none;
 }
 
@@ -63,4 +80,15 @@ nav a {
 .project-info {
     display: flex;
     flex-direction: column;
+}
+
+.table-of-contents-item > li {
+  font-size: 1.17rem;
+}
+
+.table-of-contents-item ul li {
+  font-size: 1rem;
+}
+.header-home {
+    margin: 0 0 0 0;
 }

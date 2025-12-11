@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jason Hu</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+    <script>
+      fetch("nav.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("nav-placeholder").innerHTML = data;
+        });
+    </script>
+
+    <h2><a href="index.html#projects">Projects</a> > Mobi bike data exploration</h2>
+    <div>Dec. 10, 2025</div>
+
+    <ol class="table-of-contents-item">
+      <li>
+          <a href="#p1-collecting">
+            Collecting data
+          </a>
+          <ul>
+            <li>Scraping site links with BeautifulSoup4 for Google Drive IDs</li>
+            <li>Constructing Drive download urls and automating downloads</li>
+          </ul>
+      </li>
+
+
+      <li>
+        Harmonizing data
+        <ul>
+          <li>Cleaning column names and analyzing common and discrepant columns</li>
+          <li>Choosing scheme of chosen columns and data types</li>
+        </ul>
+      </li>
+
+      <li>
+        Storing data
+        <ul>
+          <li> Importing data into SQLite DB for easy use</li>
+        </ul>
+      </li>
+      <li>Exploratory analysis</li>
+      <li>Visualization</li>
+    </ol>
+
+    <section id="p1-collecting">
+      <h3>Collecting data</h3>
+      <p></p> 
+    </section>
+
+    
+
+
+
+</body>
+</html>

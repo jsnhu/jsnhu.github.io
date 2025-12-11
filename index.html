@@ -5,16 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jason Hu</title>
   <link rel="stylesheet" href="style.css">
+  
+
 </head>
 <body>
-    <header>
-        <h1>Jason Hu</h1>
-        <nav>
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#teaching">Teaching</a>
-        </nav>
-    </header>
+    <div id="nav-placeholder"></div>
+    <script>
+      fetch("nav.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("nav-placeholder").innerHTML = data;
+        });
+    </script>
+
     <section id="about">
       <h2>About</h2>
       <p>Always fond of human-powered modes of transportation. Currently fascinated by floating point numbers. Previously applied linear programming to scheduling optimization problems. Tutor, instructor, tricyclist, and recovering data analyst. </p>
@@ -36,13 +39,15 @@
     <section id="projects">
       <h2>Projects</h2>
       <div class="project-list">
-        <div class="project-card">
-            <img src="images/project1.png" alt="Project 1 image">
-            <div class="project-info">
-                <h3>Project 1</h3>
-                <p>description of project 1.</p>
-            </div>
-        </div>
+        <a class="no-dec" href="project1.html">
+          <div class="project-card">
+              <img src="images/project1.svg" alt="Project 1 image">
+              <div class="project-info">
+                  <h3>Mobi bike data exploration</h3>
+                  <p>description of project 1.</p>
+              </div>
+          </div>
+        </a>
 
         <div class="project-card">
             <img src="images/project2.png" alt="Project 2 image">
