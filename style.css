@@ -68,9 +68,10 @@ nav a {
 }
 
 .project-card img {
-  max-width: 100%;
-  display: block;
-  margin-bottom: 1rem;
+  object-fit: cover;
+  width: 80px;
+  aspect-ratio: 1 / 1;
+  border: #0047AB 1px dotted;
 }
 
 .project-card h3 {
@@ -91,4 +92,18 @@ nav a {
 }
 .header-home {
     margin: 0 0 0 0;
+}
+
+pre {
+  background: #121212;      /* light gray background */
+  padding: 1rem;
+  border: 1px solid #000;   /* brutalist black border */
+  overflow-x: auto;         /* scroll if too wide */
+  border-radius: 5px;
+}
+
+code {
+  font-family: monospace;   /* code font */
+  font-size: 1rem;
+  color: #76afff;
 }
