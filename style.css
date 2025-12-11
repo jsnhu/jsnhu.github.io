@@ -95,15 +95,21 @@ nav a {
 }
 
 pre {
-  background: #121212;      /* light gray background */
+  background: #d4e5fd; 
   padding: 1rem;
-  border: 1px solid #000;   /* brutalist black border */
+  border: 1px dashed var(--cobalt);   /* brutalist black border */
   overflow-x: auto;         /* scroll if too wide */
-  border-radius: 5px;
+  /* border-radius: 5px; */
 }
 
 code {
   font-family: monospace;   /* code font */
   font-size: 1rem;
-  color: #76afff;
+  color: #002e6e;
+}
+
+.post-image {
+    max-width: 100%;
+    height: auto;
+    border: 1px dotted var(--cobalt);
 }
