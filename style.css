@@ -67,11 +67,20 @@ nav a {
   gap: 1rem;
 }
 
+/* .project-card img {
+  object-fit: cover;
+  width: 80px;
+  aspect-ratio: 1 / 1;
+  border: #0047AB 1px dotted;
+  
+} */
+
 .project-card img {
   object-fit: cover;
   width: 80px;
   aspect-ratio: 1 / 1;
   border: #0047AB 1px dotted;
+  
 }
 
 .project-card h3 {
